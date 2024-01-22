@@ -15,11 +15,13 @@ public class TglSepuluhController {
     @Autowired
     TglSepuluhImplementation tglSepuluhImpl;
 
+    // test endpoint
     @GetMapping(path = "/abc")
     public String abc() {
         return "bar";
     }
 
+    // endpoint for tgl 10 answers
     @GetMapping("/{code}")
     public Tgl10ResponseDTO getAnswer(@PathVariable String code) {
         return tglSepuluhImpl.resolveAnswer(code);

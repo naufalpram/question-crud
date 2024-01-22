@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.util.Map;
 
+// Data transfer object for tgl 10 response
 @Data
 public class Tgl10ResponseDTO {
     private String status;

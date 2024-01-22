@@ -1,6 +1,5 @@
 package com.edts.tdp.batch4.service;
 
-import com.edts.tdp.batch4.bean.ResponseDTO;
 import com.edts.tdp.batch4.bean.Tgl10DataDTO;
 import com.edts.tdp.batch4.bean.Tgl10ResponseDTO;
 import com.edts.tdp.batch4.constant.inputs.ArticleInputs;
@@ -18,6 +17,7 @@ import java.util.Map;
 @Service
 public class TglSepuluhImplementation implements TglSepuluhInterface {
 
+    // models and solver methods
     SongSolver songSolver = new SongSolver(); // song case solver object
     ArticleSolver articleSolver = new ArticleSolver(); // article case solver object
     Song song = new Song();
@@ -25,11 +25,12 @@ public class TglSepuluhImplementation implements TglSepuluhInterface {
 
     @Autowired
     public TglSepuluhImplementation() {
-
+        // set inputs
         song.setFullLyric(SongInputs.INPUT1);
         article.setText(ArticleInputs.INPUT1);
     }
 
+    // response resolver to map which case to solve
     public Tgl10ResponseDTO resolveAnswer(String code) {
         Tgl10ResponseDTO response = new Tgl10ResponseDTO();
         Tgl10DataDTO data;

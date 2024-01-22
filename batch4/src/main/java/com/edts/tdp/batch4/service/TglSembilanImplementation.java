@@ -1,7 +1,7 @@
 package com.edts.tdp.batch4.service;
 
-import com.edts.tdp.batch4.bean.ResponseDTO;
-import com.edts.tdp.batch4.bean.SolverMethodDTO;
+import com.edts.tdp.batch4.bean.Tgl9ResponseDTO;
+import com.edts.tdp.batch4.bean.Tgl9DataDTO;
 import com.edts.tdp.batch4.constant.inputs.*;
 import com.edts.tdp.batch4.interfaces.TglSembilanInterface;
 import com.edts.tdp.batch4.model.tglsembilan.*;
@@ -14,7 +14,7 @@ import java.util.Arrays;
 @Service
 public class TglSembilanImplementation implements TglSembilanInterface {
 
-    // tanggal 9 cases solver object
+    // models and solver method
     Solver solver = new Solver();
     SortArray sortArray = new SortArray();
     CountWord countWord = new CountWord();
@@ -25,7 +25,7 @@ public class TglSembilanImplementation implements TglSembilanInterface {
 
     @Autowired
     public TglSembilanImplementation() {
-
+        // set inputs
         sortArray.setInput(ArrayInputs.INPUT1);
         countWord.setInput(StringInputs.INPUT2);
         maxNum.setInput(ArrayInputs.INPUT3);
@@ -34,10 +34,10 @@ public class TglSembilanImplementation implements TglSembilanInterface {
         palindrome.setInput(StringInputs.INPUT1);
     }
 
-
-    public ResponseDTO resolveResponse(String code) {
-        ResponseDTO response = new ResponseDTO();
-        SolverMethodDTO data;
+    // response resolver to map which case to solve
+    public Tgl9ResponseDTO resolveResponse(String code) {
+        Tgl9ResponseDTO response = new Tgl9ResponseDTO();
+        Tgl9DataDTO data;
         try {
             switch(code) {
                 case "sort" -> data = solveSorting(this.sortArray);
@@ -70,49 +70,49 @@ public class TglSembilanImplementation implements TglSembilanInterface {
     }
 
     @Override
-    public SolverMethodDTO solveSorting(SortArray number1) {
-        SolverMethodDTO sdto = new SolverMethodDTO();
+    public Tgl9DataDTO solveSorting(SortArray number1) {
+        Tgl9DataDTO sdto = new Tgl9DataDTO();
         sdto.setInput(Arrays.toString(number1.getInput()));
         sdto.setSolution(solver.sortAscending(number1.getInput()));
         return sdto;
     }
 
     @Override
-    public SolverMethodDTO solveCountWord(CountWord number2) {
-        SolverMethodDTO sdto = new SolverMethodDTO();
+    public Tgl9DataDTO solveCountWord(CountWord number2) {
+        Tgl9DataDTO sdto = new Tgl9DataDTO();
         sdto.setInput(number2.getInput());
         sdto.setSolution(solver.countWord(number2.getInput()));
         return sdto;
     }
 
     @Override
-    public SolverMethodDTO solveMaxNum(MaxNum number3) {
-        SolverMethodDTO sdto = new SolverMethodDTO();
+    public Tgl9DataDTO solveMaxNum(MaxNum number3) {
+        Tgl9DataDTO sdto = new Tgl9DataDTO();
         sdto.setInput(Arrays.toString(number3.getInput()));
         sdto.setSolution(solver.maxNum(number3.getInput()));
         return sdto;
     }
 
     @Override
-    public SolverMethodDTO solveMaxChar(MaxChar number4) {
+    public Tgl9DataDTO solveMaxChar(MaxChar number4) {
 
-        SolverMethodDTO sdto = new SolverMethodDTO();
+        Tgl9DataDTO sdto = new Tgl9DataDTO();
         sdto.setInput(number4.getInput());
         sdto.setSolution(solver.maxCharOccurrence(number4.getInput()));
         return sdto;
     }
 
     @Override
-    public SolverMethodDTO solveBinary(Binary number5) {
-        SolverMethodDTO sdto = new SolverMethodDTO();
+    public Tgl9DataDTO solveBinary(Binary number5) {
+        Tgl9DataDTO sdto = new Tgl9DataDTO();
         sdto.setInput(Integer.toString(number5.getInput()));
         sdto.setSolution(Integer.toString(solver.toBinary(number5.getInput())));
         return sdto;
     }
 
     @Override
-    public SolverMethodDTO solvePalindrome(Palindrome number6) {
-        SolverMethodDTO sdto = new SolverMethodDTO();
+    public Tgl9DataDTO solvePalindrome(Palindrome number6) {
+        Tgl9DataDTO sdto = new Tgl9DataDTO();
         sdto.setInput(number6.getInput());
         sdto.setSolution(Boolean.toString(solver.isPalindrome(number6.getInput())));
         return sdto;
