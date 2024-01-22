@@ -1,5 +1,8 @@
 package com.edts.tdp.batch4.model.tglsepuluh;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ArticleSolver {
 
     private int upperCaseCount = 0;
@@ -37,5 +40,14 @@ public class ArticleSolver {
 
     public int getOtherCount() {
         return otherCount;
+    }
+
+    public Map<String, Integer> getAllCount() {
+        Map<String, Integer> counters = new HashMap<>();
+        counters.put("Lowercase", getLowerCaseCount());
+        counters.put("Uppercase", getUpperCaseCount());
+        counters.put("Digit", getDigitCount());
+        counters.put("Other", getOtherCount());
+        return counters;
     }
 }

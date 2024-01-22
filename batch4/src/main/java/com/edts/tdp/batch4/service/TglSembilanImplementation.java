@@ -1,39 +1,30 @@
 package com.edts.tdp.batch4.service;
 
 import com.edts.tdp.batch4.bean.ResponseDTO;
-import com.edts.tdp.batch4.constant.OutputOpener;
+import com.edts.tdp.batch4.bean.SolverMethodDTO;
 import com.edts.tdp.batch4.constant.inputs.*;
 import com.edts.tdp.batch4.interfaces.TglSembilanInterface;
 import com.edts.tdp.batch4.model.tglsembilan.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 @Service
 public class TglSembilanImplementation implements TglSembilanInterface {
 
     // tanggal 9 cases solver object
-    Solver solver;
-    SortArray sortArray;
-    CountWord countWord;
-    MaxNum maxNum;
-    MaxChar maxChar;
-    Binary binary;
-    Palindrome palindrome;
+    Solver solver = new Solver();
+    SortArray sortArray = new SortArray();
+    CountWord countWord = new CountWord();
+    MaxNum maxNum = new MaxNum();
+    MaxChar maxChar = new MaxChar();
+    Binary binary = new Binary();
+    Palindrome palindrome = new Palindrome();
 
     @Autowired
-    public TglSembilanImplementation(@Autowired Solver solver, @Autowired SortArray sortArray,
-                                     @Autowired CountWord countWord, @Autowired MaxNum maxNum,
-                                     @Autowired MaxChar maxChar, @Autowired Binary binary,
-                                     @Autowired Palindrome palindrome) {
-        this.solver = solver;
-        this.sortArray = sortArray;
-        this.countWord = countWord;
-        this.maxNum = maxNum;
-        this.maxChar = maxChar;
-        this.binary = binary;
-        this.palindrome = palindrome;
+    public TglSembilanImplementation() {
 
         sortArray.setInput(ArrayInputs.INPUT1);
         countWord.setInput(StringInputs.INPUT2);
@@ -44,54 +35,86 @@ public class TglSembilanImplementation implements TglSembilanInterface {
     }
 
 
-//    public ResponseDTO resolveResponse(String code) {
-//        ResponseDTO response = new ResponseDTO();
-//        String data;
-//        try {
-//            if (code == "sort") data = solveSorting(sortArray);
-//        } catch (Exception e) {
-//
-//        }
-//    }
+    public ResponseDTO resolveResponse(String code) {
+        ResponseDTO response = new ResponseDTO();
+        SolverMethodDTO data;
+        try {
+            switch(code) {
+                case "sort" -> data = solveSorting(this.sortArray);
+                case "countword" -> data = solveCountWord(this.countWord);
+                case "maxnum" -> data = solveMaxNum(this.maxNum);
+                case "maxchar" -> data = solveMaxChar(this.maxChar);
+                case "binary" -> data = solveBinary(this.binary);
+                case "palindrome" -> data = solvePalindrome(this.palindrome);
+                default -> throw new RuntimeException("Code is not valid");
+            }
+        } catch (Exception e) {
+            response.setInput(code);
+            response.setData(e.getMessage());
+            response.setMessage("Failed");
+            response.setStatus("400");
 
-    @Override
-    public void solveSorting(SortArray number1) {
-        System.out.println("Input: " + Arrays.toString(number1.getInput()));
-        System.out.println(solver.sortAscending(number1.getInput()));
+            String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+            response.setTimestamp(timeStamp);
+            return response;
+        }
+
+        response.setInput(data.getInput());
+        response.setData(data.getSolution());
+        response.setMessage("Success");
+        response.setStatus("200");
+
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
+        response.setTimestamp(timeStamp);
+        return response;
     }
 
     @Override
-    public void solveCountWord(CountWord number2) {
-        System.out.println(OutputOpener.NOMOR2);
-        System.out.println("Input: " + number2.getInput());
-        System.out.println(solver.countWord(number2.getInput()));
+    public SolverMethodDTO solveSorting(SortArray number1) {
+        SolverMethodDTO sdto = new SolverMethodDTO();
+        sdto.setInput(Arrays.toString(number1.getInput()));
+        sdto.setSolution(solver.sortAscending(number1.getInput()));
+        return sdto;
     }
 
     @Override
-    public void solveMaxNum(MaxNum number3) {
-        System.out.println(OutputOpener.NOMOR3);
-        System.out.println("Input: " + Arrays.toString(number3.getInput()));
-        System.out.println(solver.maxNum(number3.getInput()));
+    public SolverMethodDTO solveCountWord(CountWord number2) {
+        SolverMethodDTO sdto = new SolverMethodDTO();
+        sdto.setInput(number2.getInput());
+        sdto.setSolution(solver.countWord(number2.getInput()));
+        return sdto;
     }
 
     @Override
-    public void solveMaxChar(MaxChar number4) {
-        System.out.println(OutputOpener.NOMOR4);
-        System.out.println("Input: " + number4.getInput());
-        System.out.println(solver.maxCharOccurrence(number4.getInput()));
+    public SolverMethodDTO solveMaxNum(MaxNum number3) {
+        SolverMethodDTO sdto = new SolverMethodDTO();
+        sdto.setInput(Arrays.toString(number3.getInput()));
+        sdto.setSolution(solver.maxNum(number3.getInput()));
+        return sdto;
     }
 
     @Override
-    public void solveBinary(Binary number5) {
-        System.out.println(OutputOpener.NOMOR5);
-        System.out.println("Input: " + number5.getInput());
-        System.out.println(solver.toBinary(number5.getInput()));
+    public SolverMethodDTO solveMaxChar(MaxChar number4) {
+
+        SolverMethodDTO sdto = new SolverMethodDTO();
+        sdto.setInput(number4.getInput());
+        sdto.setSolution(solver.maxCharOccurrence(number4.getInput()));
+        return sdto;
     }
 
     @Override
-    public void solvePalindrome(Palindrome number6) {
-        System.out.println(OutputOpener.NOMOR6);
-        System.out.println("Input: " + number6.getInput());
-        System.out.println(solver.isPalindrome(number6.getInput()));
+    public SolverMethodDTO solveBinary(Binary number5) {
+        SolverMethodDTO sdto = new SolverMethodDTO();
+        sdto.setInput(Integer.toString(number5.getInput()));
+        sdto.setSolution(Integer.toString(solver.toBinary(number5.getInput())));
+        return sdto;
+    }
+
+    @Override
+    public SolverMethodDTO solvePalindrome(Palindrome number6) {
+        SolverMethodDTO sdto = new SolverMethodDTO();
+        sdto.setInput(number6.getInput());
+        sdto.setSolution(Boolean.toString(solver.isPalindrome(number6.getInput())));
+        return sdto;
     }
 }

@@ -23,22 +23,22 @@ public class Solver {
     }
 
     // solver method countword
-    public int countWord(String sentence) {
+    public String countWord(String sentence) {
         String[] words = sentence.split(" "); // split string by whitespace separator
-        return words.length;
+        return Integer.toString(words.length);
     }
 
     // solver method maxnum
-    public int maxNum(int[] arr) {
+    public String maxNum(int[] arr) {
         int max = Integer.MIN_VALUE; // assign smallest integer number
         for (int num : arr) {
             if (num > max) max = num; // check if current num is bigger than max
         }
-        return max;
+        return Integer.toString(max);
     }
 
     // solver method maxchar
-    public char maxCharOccurrence(String word) {
+    public String maxCharOccurrence(String word) {
         // Hashmap with Character as key and Integer as value pair
         HashMap<Character, Integer> occurrences = new HashMap<>();
 
@@ -59,7 +59,7 @@ public class Solver {
                 maxChar = (occurrences.get(maxChar) < occurrences.get(c)) ? c : maxChar;
             }
         }
-        return maxChar;
+        return maxChar.toString();
     }
 
     // solver method tobinary
