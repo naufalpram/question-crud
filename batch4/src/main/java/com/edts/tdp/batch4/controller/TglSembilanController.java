@@ -25,6 +25,8 @@ public class TglSembilanController {
     }
 
     // endpoint for tgl 9 answers
+    // choose code
+    // codes: sort, countword, maxnum, maxchar, binary, palindrome
     @GetMapping("/{code}")
     public ResponseEntity<Tgl9ResponseDTO> getAnswer(@PathVariable String code) {
         Tgl9ResponseDTO out = tglSembilanImpl.resolveResponse(code);

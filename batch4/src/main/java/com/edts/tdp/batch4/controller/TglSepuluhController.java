@@ -24,6 +24,8 @@ public class TglSepuluhController {
     }
 
     // endpoint for tgl 10 answers
+    // choose code
+    // codes: song, article
     @GetMapping("/{code}")
     public ResponseEntity<Tgl10ResponseDTO> getAnswer(@PathVariable String code) {
         Tgl10ResponseDTO out = tglSepuluhImpl.resolveAnswer(code);
