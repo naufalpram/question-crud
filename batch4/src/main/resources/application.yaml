@@ -1,0 +1,29 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: my-application
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://${DB_HOST:172.18.185.131}:${DB_PORT:3306}/classicmodels
+    username: ${DB_USER:tdp}
+    password: ${DB_PWD:tdp2024}
+    hikari:
+      pool-name: myapp-pool-${HOSTNAME:localhost}
+      schema: app
+    tomcat:
+      test-on-borrow: true
+      test-while-idle: true
+      validation-query: SELECT 1
+    jpa:
+      properties:
+        hibernate.id.new_generator_mappings: true
+        hibernate.order_inserts: true
+        hibernate.enable_lazy_load_no_trans: true
+    database: mysql
+    show-sql: false
+
+hibernate:
+  schema_update:
+    unique_constraint_strategy: RECREATE_QUIETLY
