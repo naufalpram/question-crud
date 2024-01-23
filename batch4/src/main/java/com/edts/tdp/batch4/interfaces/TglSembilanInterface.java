@@ -1,6 +1,6 @@
 package com.edts.tdp.batch4.interfaces;
 
-import com.edts.tdp.batch4.bean.Tgl9DataDTO;
+import com.edts.tdp.batch4.bean.Tgl9.Tgl9DataDTO;
 import com.edts.tdp.batch4.model.tglsembilan.*;
 
 public interface TglSembilanInterface {

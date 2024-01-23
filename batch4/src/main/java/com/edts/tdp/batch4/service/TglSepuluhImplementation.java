@@ -1,7 +1,7 @@
 package com.edts.tdp.batch4.service;
 
-import com.edts.tdp.batch4.bean.Tgl10DataDTO;
-import com.edts.tdp.batch4.bean.Tgl10ResponseDTO;
+import com.edts.tdp.batch4.bean.Tgl10.Tgl10DataDTO;
+import com.edts.tdp.batch4.bean.Tgl10.Tgl10ResponseDTO;
 import com.edts.tdp.batch4.constant.inputs.ArticleInputs;
 import com.edts.tdp.batch4.constant.inputs.SongInputs;
 import com.edts.tdp.batch4.interfaces.TglSepuluhInterface;
@@ -49,7 +49,7 @@ public class TglSepuluhImplementation implements TglSepuluhInterface {
             response.setInput(code);
             response.setData(null);
             response.setMessage("Failed");
-            response.setStatus(Integer.toString(HttpStatus.BAD_REQUEST.value()));
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
 
             String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
             response.setTimestamp(timeStamp);
@@ -58,7 +58,7 @@ public class TglSepuluhImplementation implements TglSepuluhInterface {
         response.setInput(data.getInput());
         response.setData(data.getCounter());
         response.setMessage("Success");
-        response.setStatus(Integer.toString(HttpStatus.OK.value()));
+        response.setStatus(HttpStatus.OK.value());
 
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
         response.setTimestamp(timeStamp);
