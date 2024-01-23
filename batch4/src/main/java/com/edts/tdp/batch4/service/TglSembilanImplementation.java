@@ -15,23 +15,34 @@ import java.util.Arrays;
 public class TglSembilanImplementation implements TglSembilanInterface {
 
     // models and solver method
-    Solver solver = new Solver();
-    SortArray sortArray = new SortArray();
-    CountWord countWord = new CountWord();
-    MaxNum maxNum = new MaxNum();
-    MaxChar maxChar = new MaxChar();
-    Binary binary = new Binary();
-    Palindrome palindrome = new Palindrome();
+    Solver solver;
+    SortArray sortArray;
+    CountWord countWord;
+    MaxNum maxNum;
+    MaxChar maxChar;
+    Binary binary;
+    Palindrome palindrome;
 
     @Autowired
-    public TglSembilanImplementation() {
+    public TglSembilanImplementation(@Autowired Solver solver, @Autowired SortArray sortArray,
+                                     @Autowired CountWord countWord, @Autowired MaxNum maxNum,
+                                     @Autowired MaxChar maxChar, @Autowired Binary binary,
+                                     @Autowired Palindrome palindrome) {
+        // assign to the service's attributes
+        this.solver = solver;
+        this.sortArray = sortArray;
+        this.countWord = countWord;
+        this.maxNum = maxNum;
+        this.maxChar = maxChar;
+        this.binary = binary;
+        this.palindrome = palindrome;
         // set inputs
-        sortArray.setInput(ArrayInputs.INPUT1);
-        countWord.setInput(StringInputs.INPUT2);
-        maxNum.setInput(ArrayInputs.INPUT3);
-        maxChar.setInput(StringInputs.INPUT3);
-        binary.setInput(IntegerInputs.INPUT1);
-        palindrome.setInput(StringInputs.INPUT1);
+        this.sortArray.setInput(ArrayInputs.INPUT1);
+        this.countWord.setInput(StringInputs.INPUT2);
+        this.maxNum.setInput(ArrayInputs.INPUT3);
+        this.maxChar.setInput(StringInputs.INPUT3);
+        this.binary.setInput(IntegerInputs.INPUT1);
+        this.palindrome.setInput(StringInputs.INPUT1);
     }
 
     // response resolver to map which case to solve

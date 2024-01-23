@@ -18,16 +18,21 @@ import java.util.Map;
 public class TglSepuluhImplementation implements TglSepuluhInterface {
 
     // models and solver methods
-    SongSolver songSolver = new SongSolver(); // song case solver object
-    ArticleSolver articleSolver = new ArticleSolver(); // article case solver object
-    Song song = new Song();
-    Article article = new Article();
+    SongSolver songSolver; // song case solver object
+    ArticleSolver articleSolver; // article case solver object
+    Song song;
+    Article article;
 
     @Autowired
-    public TglSepuluhImplementation() {
+    public TglSepuluhImplementation(@Autowired SongSolver songSolver, @Autowired ArticleSolver articleSolver,
+                                    @Autowired Song song, @Autowired Article article) {
+        this.songSolver = songSolver;
+        this.articleSolver = articleSolver;
+        this.song = song;
+        this.article = article;
         // set inputs
-        song.setFullLyric(SongInputs.INPUT1);
-        article.setText(ArticleInputs.INPUT1);
+        this.song.setFullLyric(SongInputs.INPUT1);
+        this.article.setText(ArticleInputs.INPUT1);
     }
 
     // response resolver to map which case to solve

@@ -1,8 +1,11 @@
 package com.edts.tdp.batch4.model.tglsembilan;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
+@Component
 public class Solver {
 
     // solver method sorting

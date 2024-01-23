@@ -1,8 +1,11 @@
 package com.edts.tdp.batch4.model.tglsepuluh;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class ArticleSolver {
 
     private int upperCaseCount = 0;

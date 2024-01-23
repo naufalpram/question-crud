@@ -1,5 +1,8 @@
 package com.edts.tdp.batch4.model.tglsepuluh;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Song {
     private String fullLyric;
 

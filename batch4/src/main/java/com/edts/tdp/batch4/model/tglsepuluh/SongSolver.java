@@ -1,7 +1,10 @@
 package com.edts.tdp.batch4.model.tglsepuluh;
 
+import org.springframework.stereotype.Component;
+
 import java.util.*;
 
+@Component
 public class SongSolver {
 
     // method for cleaning lyric from unique chars
