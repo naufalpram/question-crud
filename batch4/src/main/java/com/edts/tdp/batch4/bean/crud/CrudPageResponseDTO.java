@@ -4,9 +4,10 @@ import com.edts.tdp.batch4.bean.BaseResponseDTO;
 import com.edts.tdp.batch4.model.Crud;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.domain.Page;
 
 @Getter
 @Setter
-public class CrudResponseDTO extends BaseResponseDTO {
-    private Crud data;
+public class CrudPageResponseDTO extends BaseResponseDTO {
+    private Page<Crud> data;
 }

@@ -5,8 +5,10 @@ import com.edts.tdp.batch4.model.Crud;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
-public class CrudResponseDTO extends BaseResponseDTO {
-    private Crud data;
+public class CrudListResponseDTO extends BaseResponseDTO {
+    private List<Crud> data;
 }
