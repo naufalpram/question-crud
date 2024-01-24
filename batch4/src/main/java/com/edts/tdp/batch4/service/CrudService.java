@@ -2,8 +2,8 @@ package com.edts.tdp.batch4.service;
 
 import com.edts.tdp.batch4.bean.crud.CrudPageResponseDTO;
 import com.edts.tdp.batch4.bean.crud.CrudResponseDTO;
-import com.edts.tdp.batch4.bean.crud.CrudListResponseDTO;
 import com.edts.tdp.batch4.constant.crud.DeskripsiSoal;
+import com.edts.tdp.batch4.exception.CustomException;
 import com.edts.tdp.batch4.model.Crud;
 import com.edts.tdp.batch4.model.tglsembilan.Solver;
 import com.edts.tdp.batch4.repository.CrudRepository;
@@ -16,9 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -33,24 +30,29 @@ public class CrudService {
         this.solver = solver;
     }
 
-    public<T> CrudResponseDTO createEntry(int qnumber, T input) {
+    public<T> CrudResponseDTO createEntry(int number, T input) {
         CrudResponseDTO response = new CrudResponseDTO();
-        Crud obj = new Crud();
-        try {
-            if (qnumber == 2) {
-                obj = getAnswer2((String) input);
-            } else if (qnumber == 5) {
-                obj = getAnswer5((int) input);
-            } else if (qnumber == 6) {
-                obj = getAnswer6((String) input);
-            } else {
-                throw new Exception("error");
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        Crud obj;
+
+        if (number == 2) {
+            if (!(input instanceof String))
+                throw new CustomException(HttpStatus.BAD_REQUEST, "Input for number 2 must be a String type");
+            obj = getAnswer2((String) input);
+        } else if (number == 5) {
+            if (input instanceof String)
+                throw new CustomException(HttpStatus.BAD_REQUEST, "Input for number 5 must be an integer type");
+            obj = getAnswer5((int) input);
+        } else if (number == 6) {
+            if (!(input instanceof String))
+                throw new CustomException(HttpStatus.BAD_REQUEST, "Input for number 6 must be a String type");
+            obj = getAnswer6((String) input);
+        } else {
+            throw new CustomException(HttpStatus.BAD_REQUEST, "Case number must be between 2, 5, or 6");
         }
         obj = this.crudRepository.save(obj);
-
+        if (obj.equals(null)) {
+            throw new CustomException(HttpStatus.NOT_FOUND, "Entry creation failed");
+        }
         response.setStatus(HttpStatus.CREATED.value());
         response.setMessage(HttpStatus.CREATED.getReasonPhrase());
         response.setData(obj);
@@ -62,11 +64,16 @@ public class CrudService {
         return response;
     }
 
-    public CrudResponseDTO getEntryByIdNum2(int id) throws Exception {
-        CrudResponseDTO response = new CrudResponseDTO();
-        Optional<Crud> crud = this.crudRepository.findByIdAndQuestionNumber(id, 2);
+    public CrudResponseDTO getEntryById(int id) {
+        if (id < 0)
+            throw new CustomException(HttpStatus.BAD_REQUEST, "Id must be a positive integer");
 
-        if (crud.isPresent()) {
+        CrudResponseDTO response = new CrudResponseDTO();
+        Optional<Crud> crud = this.crudRepository.findById(id);
+
+        if (crud.isEmpty()) {
+            throw new CustomException(HttpStatus.NOT_FOUND, String.format("Entry with id: %d is not found in the database", id));
+        } else {
             response.setData(crud.get());
             response.setStatus(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());
@@ -74,56 +81,63 @@ public class CrudService {
             // Define a DateTimeFormatter
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             response.setTimestamp(LocalDateTime.now().format(formatter));
-        } else {
-            throw new Exception(String.format("Entry with id: %d is not present in the database", id));
         }
 
         return response;
     }
 
-    public CrudPageResponseDTO getAllEntriesPagination(int page, int size) throws Exception {
+    public CrudPageResponseDTO getAllEntriesPagination(int page, int size) {
+        if (page < 0 || size < 0)
+            throw new CustomException(HttpStatus.BAD_REQUEST, "page or size must be positive integers");
+
         CrudPageResponseDTO response = new CrudPageResponseDTO();
         Pageable pageable = PageRequest.of(page, size);
 
-        try {
-            Page<Crud> allCrud = this.crudRepository.findAll(pageable);
-            response.setData(allCrud);
-            response.setStatus(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
+        Page<Crud> allCrud = this.crudRepository.findAll(pageable);
+        response.setData(allCrud);
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage(HttpStatus.OK.getReasonPhrase());
 
-            // Define a DateTimeFormatter
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            response.setTimestamp(LocalDateTime.now().format(formatter));
-        } catch (Exception e) {
-            throw new Exception("There are no entry");
-        }
+        // Define a DateTimeFormatter
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        response.setTimestamp(LocalDateTime.now().format(formatter));
         return response;
     }
 
-    public CrudPageResponseDTO getAllNumEntryPagination(int number, int page, int size) throws Exception {
+    public CrudPageResponseDTO getAllNumEntryPagination(int number, int page, int size) {
+        if (!(number == 2 || number == 5 || number == 6))
+            throw new CustomException(HttpStatus.BAD_REQUEST, "Case number must be between 2, 5, or 6");
+
+        if (page < 0 || size < 0)
+            throw new CustomException(HttpStatus.BAD_REQUEST, "Page or size must be positive integers");
+
         CrudPageResponseDTO response = new CrudPageResponseDTO();
         Pageable pageable = PageRequest.of(page, size);
 
-        try {
-            Page<Crud> allNum2 = this.crudRepository.findAllByQuestionNumber(number, pageable);
-            response.setData(allNum2);
-            response.setStatus(HttpStatus.OK.value());
-            response.setMessage(HttpStatus.OK.getReasonPhrase());
+        Page<Crud> allNum2 = this.crudRepository.findAllByQuestionNumber(number, pageable);
+        response.setData(allNum2);
+        response.setStatus(HttpStatus.OK.value());
+        response.setMessage(HttpStatus.OK.getReasonPhrase());
 
-            // Define a DateTimeFormatter
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            response.setTimestamp(LocalDateTime.now().format(formatter));
-        } catch (Exception e) {
-            throw new Exception(String.format("There are no entry of question number %d", 2));
-        }
+        // Define a DateTimeFormatter
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        response.setTimestamp(LocalDateTime.now().format(formatter));
         return response;
     }
 
-    public CrudResponseDTO updateEntry(int number, int id, Crud newCrud) throws Exception{
+    public CrudResponseDTO updateEntry(int number, int id, Crud newCrud) {
+        if (!(number == 2 || number == 5 || number == 6))
+            throw new CustomException(HttpStatus.BAD_REQUEST, "Case number must be between 2, 5, or 6");
+
+        if (id < 0)
+            throw new CustomException(HttpStatus.BAD_REQUEST, "Id must be a positive integer");
+
         CrudResponseDTO response = new CrudResponseDTO();
         Optional<Crud> toBeUpdated = this.crudRepository.findByIdAndQuestionNumber(id, number);
 
-        if (toBeUpdated.isPresent()) {
+        if (toBeUpdated.isEmpty()) {
+            throw new CustomException(HttpStatus.NOT_FOUND, String.format("Entry with id: %d is not found in the database", id));
+        } else {
             Crud oldCrud = toBeUpdated.get();
             newCrud.setId(id);
             newCrud.setCreatedDate(newCrud.getCreatedDate() == null ? oldCrud.getCreatedDate() : newCrud.getCreatedDate());
@@ -139,18 +153,21 @@ public class CrudService {
             // Define a DateTimeFormatter
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             response.setTimestamp(LocalDateTime.now().format(formatter));
-        } else {
-            throw new Exception(String.format("Entry with id: %d is not present in the database", id));
         }
 
         return response;
     }
 
-    public CrudResponseDTO deleteEntry(int id) throws Exception {
+    public CrudResponseDTO deleteEntry(int id) {
+        if (id < 0)
+            throw new CustomException(HttpStatus.BAD_REQUEST, "Id must be a positive integer");
+
         CrudResponseDTO response = new CrudResponseDTO();
         Optional<Crud> toBeDeleted = this.crudRepository.findById(id);
 
-        if (toBeDeleted.isPresent()) {
+        if (toBeDeleted.isEmpty()) {
+            throw new CustomException(HttpStatus.NOT_FOUND, String.format("Entry with id: %d is not found in the database", id));
+        } else {
             this.crudRepository.deleteById(id);
             response.setStatus(HttpStatus.NO_CONTENT.value());
             response.setMessage("Deleted");
@@ -158,8 +175,6 @@ public class CrudService {
             // Define a DateTimeFormatter
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             response.setTimestamp(LocalDateTime.now().format(formatter));
-        } else {
-            throw new Exception(String.format("Entry with id: %d is not present in the database", id));
         }
         return response;
     }
