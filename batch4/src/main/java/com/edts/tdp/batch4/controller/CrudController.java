@@ -21,6 +21,8 @@ public class CrudController {
 
     @PostMapping("/create")
     public ResponseEntity<CrudResponseDTO> createEntry(@RequestParam int number, @RequestBody Map<String, Object> request) {
+        if (!request.containsKey("input"))
+            throw new CustomException(HttpStatus.BAD_REQUEST, "Input params not found");
         Object input = request.get("input");
         if (input == null)
             throw new CustomException(HttpStatus.BAD_REQUEST, "Must have an input");
@@ -52,6 +54,8 @@ public class CrudController {
     public ResponseEntity<CrudResponseDTO> updateEntry(@RequestParam int number,
                                                             @RequestParam int id,
                                                             @RequestBody Crud body) {
+        if (body.equals(null))
+            throw new CustomException(HttpStatus.BAD_REQUEST, "Must have a body with attributes from Crud model");
         CrudResponseDTO response = crudService.updateEntry(number, id, body);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
