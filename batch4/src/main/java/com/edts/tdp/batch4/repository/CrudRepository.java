@@ -12,6 +12,6 @@ import java.util.Optional;
 @Repository
 public interface CrudRepository extends JpaRepository<Crud, Integer> {
     Optional<Crud> findByIdAndQuestionNumber(int id, int questionNumber);
-//    Optional<List<Crud>> findAllByQuestionNumber(int questionNumber);
+    Page<Crud> findAll(Pageable pageable);
     Page<Crud> findAllByQuestionNumber(int questionNumber, Pageable pageable);
 }

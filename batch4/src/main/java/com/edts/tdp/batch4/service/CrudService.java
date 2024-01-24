@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -79,12 +81,31 @@ public class CrudService {
         return response;
     }
 
-    public CrudPageResponseDTO getAllEntryPagination(int page) throws Exception {
+    public CrudPageResponseDTO getAllEntriesPagination(int page, int size) throws Exception {
         CrudPageResponseDTO response = new CrudPageResponseDTO();
-        Pageable pageable = PageRequest.of(page,2);
+        Pageable pageable = PageRequest.of(page, size);
 
         try {
-            Page<Crud> allNum2 = this.crudRepository.findAllByQuestionNumber(2, pageable);
+            Page<Crud> allCrud = this.crudRepository.findAll(pageable);
+            response.setData(allCrud);
+            response.setStatus(HttpStatus.OK.value());
+            response.setMessage(HttpStatus.OK.getReasonPhrase());
+
+            // Define a DateTimeFormatter
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            response.setTimestamp(LocalDateTime.now().format(formatter));
+        } catch (Exception e) {
+            throw new Exception("There are no entry");
+        }
+        return response;
+    }
+
+    public CrudPageResponseDTO getAllNumEntryPagination(int number, int page, int size) throws Exception {
+        CrudPageResponseDTO response = new CrudPageResponseDTO();
+        Pageable pageable = PageRequest.of(page, size);
+
+        try {
+            Page<Crud> allNum2 = this.crudRepository.findAllByQuestionNumber(number, pageable);
             response.setData(allNum2);
             response.setStatus(HttpStatus.OK.value());
             response.setMessage(HttpStatus.OK.getReasonPhrase());
@@ -98,9 +119,9 @@ public class CrudService {
         return response;
     }
 
-    public CrudResponseDTO updateNum2(int id, Crud newCrud) throws Exception{
+    public CrudResponseDTO updateEntry(int number, int id, Crud newCrud) throws Exception{
         CrudResponseDTO response = new CrudResponseDTO();
-        Optional<Crud> toBeUpdated = this.crudRepository.findByIdAndQuestionNumber(id, 2);
+        Optional<Crud> toBeUpdated = this.crudRepository.findByIdAndQuestionNumber(id, number);
 
         if (toBeUpdated.isPresent()) {
             Crud oldCrud = toBeUpdated.get();
@@ -125,9 +146,8 @@ public class CrudService {
         return response;
     }
 
-    public CrudResponseDTO deleteNum2(int id) throws Exception {
+    public CrudResponseDTO deleteEntry(int id) throws Exception {
         CrudResponseDTO response = new CrudResponseDTO();
-//        Optional<Crud> toBeDeleted = this.crudRepository.findByIdAndQuestionNumber(id, 2);
         Optional<Crud> toBeDeleted = this.crudRepository.findById(id);
 
         if (toBeDeleted.isPresent()) {

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -37,10 +38,21 @@ public class CrudController {
     }
 
     @GetMapping("/get/all")
-    public ResponseEntity<CrudPageResponseDTO> getAllNum2Pagination(@RequestParam int number,
-                                                                    @RequestParam int page) {
+    public ResponseEntity<CrudPageResponseDTO> getAll(@RequestParam int page, @RequestParam int size) {
         try {
-            CrudPageResponseDTO response = crudService.getAllEntryPagination(page);
+            CrudPageResponseDTO response = crudService.getAllEntriesPagination(page, size);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/get/all-by-num/{number}")
+    public ResponseEntity<CrudPageResponseDTO> getAllNumPagination(@PathVariable int number,
+                                                                    @RequestParam int page,
+                                                                   @RequestParam int size) {
+        try {
+            CrudPageResponseDTO response = crudService.getAllNumEntryPagination(number, page, size);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -48,11 +60,11 @@ public class CrudController {
     }
 
     @PatchMapping("/update")
-    public ResponseEntity<CrudResponseDTO> updateEntryNum2(@RequestParam int number,
+    public ResponseEntity<CrudResponseDTO> updateEntry(@RequestParam int number,
                                                             @RequestParam int id,
                                                             @RequestBody Crud body) {
         try {
-            CrudResponseDTO response = crudService.updateNum2(id, body);
+            CrudResponseDTO response = crudService.updateEntry(number, id, body);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -60,9 +72,9 @@ public class CrudController {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<CrudResponseDTO> deleteEntryNum2(@RequestParam int id) {
+    public ResponseEntity<CrudResponseDTO> deleteEntry(@RequestParam int id) {
         try {
-            CrudResponseDTO response = crudService.deleteNum2(id);
+            CrudResponseDTO response = crudService.deleteEntry(id);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
