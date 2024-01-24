@@ -30,15 +30,15 @@ public class CrudService {
         try {
             if (qnumber == 2) {
                 obj = getAnswer2((String) input);
-            } else if (qnumber == 3) {
-                obj = getAnswer3((int[]) input);
             } else if (qnumber == 5) {
                 obj = getAnswer5((int) input);
+            } else if (qnumber == 6) {
+                obj = getAnswer6((String) input);
             } else {
-                throw new Exception();
+                throw new Exception("error");
             }
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
         }
         obj = this.crudRepository.save(obj);
 
@@ -62,24 +62,11 @@ public class CrudService {
             obj.setInput(sentence);
             obj.setResult(res);
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
         }
         return obj;
     }
 
-    private Crud getAnswer3(int[] arrInt) {
-        Crud obj = new Crud();
-        try {
-            String res = solveNum3(arrInt);
-            obj.setQuestionNumber(3);
-            obj.setDeskripsiSoal(DeskripsiSoal.NUMBER3);
-            obj.setInput(Arrays.toString(arrInt));
-            obj.setResult(res);
-        } catch (Exception e) {
-
-        }
-        return obj;
-    }
 
     private Crud getAnswer5(int decimal) {
         Crud obj = new Crud();
@@ -90,7 +77,20 @@ public class CrudService {
             obj.setInput(Integer.toString(decimal));
             obj.setResult(res);
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
+        }
+        return obj;
+    }
+    private Crud getAnswer6(String word) {
+        Crud obj = new Crud();
+        try {
+            String res = solveNum6(word);
+            obj.setQuestionNumber(6);
+            obj.setDeskripsiSoal(DeskripsiSoal.NUMBER6);
+            obj.setInput(word);
+            obj.setResult(res);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
         return obj;
     }
@@ -99,11 +99,11 @@ public class CrudService {
         return this.solver.countWord(sentence);
     }
 
-    private String solveNum3(int[] arrInt) {
-        return this.solver.maxNum(arrInt);
-    }
-
     private String solveNum5(int decimal) {
         return Integer.toString(this.solver.toBinary(decimal));
+    }
+
+    private String solveNum6(String str) {
+        return Boolean.toString(this.solver.isPalindrome(str));
     }
 }
