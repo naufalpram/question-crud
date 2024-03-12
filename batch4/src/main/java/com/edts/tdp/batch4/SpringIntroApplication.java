@@ -1,0 +1,14 @@
+package com.edts.tdp.batch4;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+
+@SpringBootApplication
+public class SpringIntroApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringIntroApplication.class, args);
+	}
+
+}
